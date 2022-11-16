@@ -4,5 +4,5 @@ const venueController = require('./../controllers/venueController');
 const router = express.Router();
 
 
-router.get("/getall", venueController.getallnearvenues)
+router.get("/distances/:latlng/unit/:unit", venueController.getallnearvenues)
 module.exports = router;

@@ -1,0 +1,8 @@
+/node_modules
+/dist
+/Images
+package-lock.json
+/txtfiles
+api.yml
+/log
+test.js

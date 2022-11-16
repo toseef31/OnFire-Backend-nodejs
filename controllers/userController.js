@@ -39,7 +39,6 @@ exports.updateMe = catchAsync(async (req, res, next) => {
     });
   });
 
-
   exports.getprofiledata =catchAsync(async (req, res, next) => {
     let profiledata = await User.findById(req.user._id);
     

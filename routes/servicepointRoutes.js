@@ -3,5 +3,7 @@ const servicepointController = require("../controllers/servicepointController");
 
 const router = express.Router();
 
-router.get("/getallservicepoint", servicepointController.getallservicepoint);
+router.get("/getservicepoint/:id", servicepointController.getservicepoint);
+//download service point menu
+router.get("/downloadmenu/:filename", servicepointController.download);
 module.exports = router;

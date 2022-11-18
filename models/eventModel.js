@@ -22,10 +22,6 @@ const eventSchema = new mongoose.Schema(
       type: String,
       required: [true, "A event must have a venue"],
     },
-    venue: {
-      type: String,
-      required: [true, "A event must have a venue"],
-    },
     Location: {
       // GeoJSON
       type: {
@@ -41,6 +37,12 @@ const eventSchema = new mongoose.Schema(
       type: String,
       required: [true, "A event must have a venue"],
     },
+    servicepoint: [
+      {
+        type: mongoose.Schema.ObjectId,
+        ref: "Servicepoint",
+      },
+    ],
   },
   {
     toJSON: { virtuals: true },

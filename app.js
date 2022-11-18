@@ -47,7 +47,7 @@ app.use(xss());
 //   })
 // );
 
-app.use("/projectimages", express.static("projectimages"));
+app.use("/projectdata", express.static("projectimages"));
 
 app.use((req, res, next) => {
   req.requestTime = new Date().toISOString();

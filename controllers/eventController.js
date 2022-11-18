@@ -7,7 +7,7 @@ const moment = require("moment");
 //file upload
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, "banners");
+    cb(null, "projectdata/eventspic");
   },
   filename: (req, file, cb) => {
     cb(null, Date.now() + file.originalname);
@@ -31,7 +31,6 @@ exports.upload = multer({
 exports.createEvent = catchAsync(async (req, res, next) => {
   req.body.eventimage = req.file.filename;
   const newEvent = await Event.create(req.body);
-  console.log(newEvent);
   res.status(201).json({
     status: "success",
     data: {
@@ -42,7 +41,10 @@ exports.createEvent = catchAsync(async (req, res, next) => {
 
 //http://localhost:3000/api/v1/events/getevent/6373b4a1f7f043c9152152ba
 exports.getevent = catchAsync(async (req, res, next) => {
-  const event = await Event.findById(req.params.id);
+  const event = await Event.findById(req.params.id).populate({
+    path: "servicepoint",
+    select: "pointname pointimage",
+  });
 
   if (!event) {
     return next(new AppError("No event found with that ID", 404));

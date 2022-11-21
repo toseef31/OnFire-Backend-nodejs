@@ -6,10 +6,7 @@ const fs = require("fs");
 
 exports.getservicepoint = catchAsync(async (req, res, next) => {
   console.log(req.params.id);
-  const servicepoint = await Servicepoint.findById(
-    req.params.id,
-    "pointimage pointname pointmenu"
-  );
+  const servicepoint = await Servicepoint.findById(req.params.id);
   console.log(servicepoint);
   res.status(200).json({
     status: "success",

@@ -12,9 +12,17 @@ const userRouter = require("./routes/userRoutes");
 const eventRouter = require("./routes/eventRoutes");
 const venueRouter = require("./routes/venueRoutes");
 const servicepointRouter = require("./routes/servicepointRoutes");
+const cors = require("cors");
 
 const app = express();
 app.use(helmet());
+
+app.use(
+  cors({
+    origin: "*",
+    //  withCredentials: true,
+  })
+);
 
 // Development logging
 console.log(process.env.NODE_ENV);

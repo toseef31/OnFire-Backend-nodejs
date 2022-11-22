@@ -127,10 +127,7 @@ exports.geteventsbycitycountry = catchAsync(async (req, res, next) => {
   const features = new APIFeatures(
     Event.find({ "Location.description": "islamabad" }).sort({ Dates: 1 }),
     req.query
-  )
-    .sort()
-    .limitFields()
-    .paginate();
+  );
   const events = await features.query;
   // SEND RESPONSE
   res.status(200).json({

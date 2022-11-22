@@ -19,25 +19,8 @@ const servicepointSchema = new mongoose.Schema(
     ],
     food_servicepoints: [
       {
-        fpointimage: {
-          type: String,
-        },
-        fpointname: {
-          type: String,
-        },
-        fpointdescription: {
-          type: String,
-        },
-        fpointmenu: [
-          {
-            type: {
-              type: String,
-            },
-            itemname: String,
-            category: String,
-            price: Number,
-          },
-        ],
+        type: mongoose.Schema.ObjectId,
+        ref: "Foodservice",
       },
     ],
   },

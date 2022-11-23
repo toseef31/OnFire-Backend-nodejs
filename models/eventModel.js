@@ -6,6 +6,10 @@ const eventSchema = new mongoose.Schema(
       type: String,
       required: [true, "A event must have a cover image"],
     },
+    eventmenu: {
+      type: String,
+      required: [true, "A event must have a cover image"],
+    },
     eventname: {
       type: String,
       required: [true, "A event must have a name"],

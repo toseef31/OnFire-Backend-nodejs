@@ -22,7 +22,6 @@ const userSchema = new mongoose.Schema({
   mobilenumber: {
     type: String,
     required: [true, "Please provide your number"],
-    unique: true,
     lowercase: true,
   },
   status: {

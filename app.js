@@ -12,8 +12,9 @@ const userRouter = require("./routes/userRoutes");
 const eventRouter = require("./routes/eventRoutes");
 const venueRouter = require("./routes/venueRoutes");
 const servicepointRouter = require("./routes/servicepointRoutes");
-const cors = require("cors");
+const ticketRouter = require("./routes/ticketRoutes");
 
+const cors = require("cors");
 const app = express();
 app.use(helmet());
 
@@ -66,6 +67,7 @@ app.use("/api/v1/events", eventRouter);
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/venues", venueRouter);
 app.use("/api/v1/service", servicepointRouter);
+app.use("/api/v1/ticket", ticketRouter);
 
 app.all("*", (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));

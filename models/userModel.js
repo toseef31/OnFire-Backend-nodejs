@@ -33,6 +33,13 @@ const userSchema = new mongoose.Schema({
     type: String,
     unique: true,
   },
+  //working here on it
+  MyTicket: [
+    {
+      type: mongoose.Schema.ObjectId,
+      ref: "Ticket",
+    },
+  ],
   password: {
     type: String,
     required: [true, "Please provide a password"],

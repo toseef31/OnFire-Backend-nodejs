@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const Event = require("./../models/eventModel");
 //https://www.youtube.com/watch?v=bedqJstO5_c
 const ticketSchema = new mongoose.Schema(
   {
@@ -9,10 +10,7 @@ const ticketSchema = new mongoose.Schema(
     price: {
       type: Number,
     },
-    eventid: {
-      type: String,
-      required: [true, "A ticket must created for a event"],
-    },
+    event: Array,
     Dates: { type: Date },
     ticketdescription: {
       type: String,
@@ -23,6 +21,14 @@ const ticketSchema = new mongoose.Schema(
     toObject: { virtuals: true },
   }
 );
+
+ticketSchema.pre("save", async function (next) {
+  const eventsPromises = this.event.map(
+    async (id) => await Event.findById(id).select("eventname eventimage")
+  );
+  this.event = await Promise.all(eventsPromises);
+  next();
+});
 
 const Ticket = mongoose.model("Ticket", ticketSchema);
 module.exports = Ticket;

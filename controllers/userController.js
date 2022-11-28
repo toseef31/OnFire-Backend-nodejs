@@ -25,8 +25,7 @@ exports.updateMe = catchAsync(async (req, res, next) => {
     "name",
     "email",
     "surname",
-    "mobilenumber",
-    "password"
+    "mobilenumber"
   );
   const updatedUser = await User.findByIdAndUpdate(req.user.id, filteredBody, {
     new: true,
@@ -37,21 +36,6 @@ exports.updateMe = catchAsync(async (req, res, next) => {
     status: "success",
     data: {
       user: updatedUser,
-    },
-  });
-});
-
-exports.getprofiledata = catchAsync(async (req, res, next) => {
-  let profiledata = await User.findById(req.user._id);
-
-  if (!profiledata) {
-    return next(new AppError("No document found with that ID", 404));
-  }
-
-  res.status(200).json({
-    status: "success",
-    data: {
-      data: profiledata,
     },
   });
 });

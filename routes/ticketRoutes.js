@@ -10,5 +10,5 @@ router.patch(
   authController.protect,
   ticketController.assignticket
 );
-
+router.post("/addticket", ticketController.addticket);
 module.exports = router;

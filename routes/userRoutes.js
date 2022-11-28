@@ -16,11 +16,13 @@ router.patch(
 
 router.patch("/updateMe", authController.protect, userController.updateMe);
 router.get("/myqrcode", authController.protect, userController.generateQR);
+//not consumed in front end
 router.get(
   "/profiledata",
   authController.protect,
   userController.getprofiledata
 );
+
 // router.delete('/deleteMe', authController.protect, userController.deleteMe);
 
 module.exports = router;

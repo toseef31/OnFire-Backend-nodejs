@@ -56,7 +56,8 @@ app.use(xss());
 //   })
 // );
 
-app.use("/projectdata", express.static("projectimages"));
+//http://localhost:3000/projectdata/banners/img2.jpg
+app.use("/projectdata", express.static("projectdata"));
 
 app.use((req, res, next) => {
   req.requestTime = new Date().toISOString();

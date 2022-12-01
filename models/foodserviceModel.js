@@ -7,12 +7,15 @@ const foodserviceSchema = new mongoose.Schema(
     },
     fpointname: {
       type: String,
+      unique: true,
     },
     fpointdescription: {
       type: String,
     },
     fpointcategory: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Category",
+      required: true,
     },
     fpointmenu: [
       {
@@ -20,7 +23,11 @@ const foodserviceSchema = new mongoose.Schema(
           type: String,
         },
         itemname: String,
-        category: String,
+        category: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Category",
+          required: true,
+        },
         price: Number,
       },
     ],

@@ -6,6 +6,7 @@ const AppError = require("./../utils/appError");
 const APIFeatures = require("./../utils/apiFeatures");
 const fs = require("fs");
 
+//get general service point
 exports.getservicepoint = catchAsync(async (req, res, next) => {
   console.log(req.params.id);
   const servicepoint = await Servicepoint.findById(
@@ -23,7 +24,6 @@ exports.getservicepoint = catchAsync(async (req, res, next) => {
 
 //get food servicepoint
 exports.getfoodservicepoint = catchAsync(async (req, res, next) => {
-  console.log(req.params.id);
   const servicepoint = await Servicepoint.findById(
     req.params.id,
     "food_servicepoints"
@@ -50,17 +50,14 @@ exports.download = (req, res, next) => {
   file.pipe(res);
 };
 
-//geting foodservicepoint by categories //we have to add fpointcategorie in food model
-
-{
-  ("this route is not yet implemented");
-}
-
 //geting foodservicepoint menu by categories
 exports.foodmenubycategory = catchAsync(async (req, res, next) => {
   const fservicepoint = await Foodservice.findById(req.params.id);
-  let obj = fservicepoint.fpointmenu.filter((e) => e.category === "pizza");
+  let obj = fservicepoint.fpointmenu.filter(
+    (e) => e.category == req.params.catid
+  );
 
+  console.log(obj);
   res.status(200).json({
     status: "success",
     data: {
@@ -69,10 +66,26 @@ exports.foodmenubycategory = catchAsync(async (req, res, next) => {
   });
 });
 
+//get food point on basis of category// there is difference between fpointmenucategories
+// and fpointcategories
+exports.foodpointsbycategory = catchAsync(async (req, res, next) => {
+  const fservicepoint = await Foodservice.find({
+    fpointcategory: req.params.catid,
+  });
+  res.status(200).json({
+    status: "success",
+    data: {
+      fservicepoint,
+    },
+  });
+});
+
 //getting servicepoint menu on basis of different categories
 exports.menubycategory = catchAsync(async (req, res, next) => {
   const servicepoint = await Servicepoint.findById(req.params.id);
-  let obj = servicepoint.pointmenu.find((e) => e.category === "desifood");
+  let obj = servicepoint.pointmenu.filter(
+    (e) => e.category === req.params.catid
+  );
   res.status(200).json({
     status: "success",
     data: {

@@ -21,7 +21,7 @@ const eventSchema = new mongoose.Schema(
       ],
       minlength: [3, "A event name must have more or equal then 10 characters"],
     },
-    Dates: { type: Date },
+    Dates: [Date],
     venuename: {
       type: String,
       required: [true, "A event must have a venue"],
@@ -38,8 +38,9 @@ const eventSchema = new mongoose.Schema(
       description: String,
     },
     eventcategory: {
-      type: String,
-      required: [true, "A event must have a venue"],
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Category",
+      required: true,
     },
     servicepoint: [
       {

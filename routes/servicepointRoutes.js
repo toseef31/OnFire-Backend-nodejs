@@ -8,11 +8,20 @@ router.get(
   "/getfoodservicepoint/:id",
   servicepointController.getfoodservicepoint
 );
-router.get("/menubycategory/:id", servicepointController.menubycategory);
 router.get(
-  "/foodmenubycategory/:id",
+  "/foodpointbycategory/category/:catid",
+  servicepointController.foodpointsbycategory
+);
+
+router.get(
+  "/menubycategory/:id/category/:catid",
+  servicepointController.menubycategory
+);
+router.get(
+  "/foodmenubycategory/:id/category/:catid",
   servicepointController.foodmenubycategory
 );
+
 // router.get(
 //   "/getfoodservicepoint/:id",
 //   servicepointController.getfoodservicepoint

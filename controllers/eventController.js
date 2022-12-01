@@ -3,6 +3,7 @@ const APIFeatures = require("./../utils/apiFeatures");
 const catchAsync = require("./../utils/catchAsync");
 const AppError = require("./../utils/appError");
 const multer = require("multer");
+const { default: mongoose } = require("mongoose");
 const moment = require("moment");
 //file upload
 const storage = multer.diskStorage({
@@ -74,16 +75,13 @@ exports.getallevents = catchAsync(async (req, res, next) => {
         ],
       }
     : {};
-
   req.query = { keyword, ...req.query };
-
   const features = new APIFeatures(Event.find().sort({ Dates: 1 }), req.query)
     .filter()
     .sort()
     .limitFields()
     .paginate();
   let events = await features.query;
-
   res.status(200).json({
     status: "success",
     results: events.length,
@@ -94,24 +92,11 @@ exports.getallevents = catchAsync(async (req, res, next) => {
 });
 
 //get all events by their category
-//http://localhost:3000/api/v1/events/getallbycatogry?searchcategory=electronic
+//http://localhost:3000/api/v1/events/getallbycatogry/request param
 exports.geteventsbycategories = catchAsync(async (req, res, next) => {
-  const keyword = req.query.searchcategory
-    ? {
-        $or: [
-          {
-            eventcategory: { $regex: req.query.searchcategory, $options: "i" },
-          },
-        ],
-      }
-    : {};
-  req.query = { keyword, ...req.query };
-  const features = new APIFeatures(Event.find().sort({ Dates: 1 }), req.query)
-    .filter()
-    .sort()
-    .limitFields()
-    .paginate();
-  const events = await features.query;
+  let events = await Event.find({
+    eventcategory: mongoose.Types.ObjectId(req.params.catid),
+  });
   // SEND RESPONSE
   res.status(200).json({
     status: "success",

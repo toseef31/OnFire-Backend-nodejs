@@ -24,7 +24,7 @@ const ticketSchema = new mongoose.Schema(
 
 ticketSchema.pre("save", async function (next) {
   const eventsPromises = this.event.map(
-    async (id) => await Event.findById(id).select("eventname eventimage")
+    async (id) => await Event.findById(id).select("eventname eventimage ")
   );
   this.event = await Promise.all(eventsPromises);
   next();

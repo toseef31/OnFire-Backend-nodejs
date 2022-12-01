@@ -31,7 +31,6 @@ const userSchema = new mongoose.Schema({
   },
   confirmationCode: {
     type: String,
-    unique: true,
   },
   //working here on it
   MyTicket: [
@@ -43,7 +42,7 @@ const userSchema = new mongoose.Schema({
   password: {
     type: String,
     required: [true, "Please provide a password"],
-    minlength: 8,
+    minlength: 5,
     select: false, // to not show password in response
   },
   passwordConfirm: {
@@ -94,13 +93,10 @@ userSchema.methods.changedPasswordAfter = function (JWTTimestamp) {
       this.passwordChangedAt.getTime() / 1000,
       10
     );
-
     return JWTTimestamp < changedTimestamp;
   }
   // False means NOT changed
   return false;
 };
-
 const User = mongoose.model("User", userSchema);
-
 module.exports = User;

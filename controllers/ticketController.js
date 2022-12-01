@@ -32,13 +32,15 @@ exports.getticket = catchAsync(async (req, res, next) => {
 
 //we have to take my ticket from request
 exports.assignticket = catchAsync(async (req, res, next) => {
-  console.log(req.user.id);
-  const user = await User.findByIdAndUpdate(req.user.id, {
+  await User.findByIdAndUpdate(req.user.id, {
     $push: {
-      MyTicket: "637e03fc6b858d577e858426",
+      MyTicket: "6384993d22843a43b261cc7b",
     },
-  }).populate("MyTicket");
+  });
 
+  const user = await User.findById(req.user.id).populate("MyTicket");
+
+  console.log(user.MyTicket);
   const MyTicket = user.MyTicket;
   res.status(200).json({
     status: "success",

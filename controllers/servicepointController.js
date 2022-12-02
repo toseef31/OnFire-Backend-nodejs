@@ -2,18 +2,14 @@ const Servicepoint = require("./../models/servicepointModel");
 const Foodservice = require("./../models/foodserviceModel");
 
 const catchAsync = require("./../utils/catchAsync");
-const AppError = require("./../utils/appError");
-const APIFeatures = require("./../utils/apiFeatures");
 const fs = require("fs");
 
 //get general service point
 exports.getservicepoint = catchAsync(async (req, res, next) => {
-  console.log(req.params.id);
   const servicepoint = await Servicepoint.findById(
     req.params.id,
     "pointimage pointname pointmenu"
   );
-  console.log(servicepoint);
   res.status(200).json({
     status: "success",
     data: {
@@ -28,7 +24,6 @@ exports.getfoodservicepoint = catchAsync(async (req, res, next) => {
     req.params.id,
     "food_servicepoints"
   ).populate("food_servicepoints");
-  console.log(servicepoint);
   res.status(200).json({
     status: "success",
     data: {

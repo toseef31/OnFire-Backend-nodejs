@@ -56,7 +56,7 @@ app.use(xss());
 //   })
 // );
 
-//http://localhost:3000/projectdata/banners/img2.jpg
+//http://localhost:3000/projectdata/banners/banner.png
 app.use("/projectdata", express.static("projectdata"));
 
 app.use((req, res, next) => {

@@ -3,7 +3,6 @@ const Foodservice = require("./../models/foodserviceModel");
 
 const catchAsync = require("./../utils/catchAsync");
 const fs = require("fs");
-
 //get general service point
 exports.getservicepoint = catchAsync(async (req, res, next) => {
   const servicepoint = await Servicepoint.findById(

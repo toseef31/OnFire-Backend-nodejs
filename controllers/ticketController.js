@@ -31,8 +31,12 @@ exports.getticket = catchAsync(async (req, res, next) => {
 
 exports.assignticket = catchAsync(async (req, res, next) => {
   req.body.User = req.user.id;
+  const data = await QRCode.toDataURL(
+    req.user.email + req.user._id + req.body.ticketname
+  );
+  const html = `<div><img src="${data}"/></div>`;
+  req.body.ticketqr = html;
   const ticket = await Ticket.create(req.body);
-  console.log(typeof ticket.ticketquantity);
   res.status(200).json({
     status: "success",
     data: {
@@ -46,10 +50,11 @@ exports.getalluserticket = catchAsync(async (req, res, next) => {
   const tickets = await Ticket.find({
     User: req.user.id,
   });
+
   res.status(200).json({
     status: "success",
     data: {
-      tickets,
+      tickets: tickets,
     },
   });
 });

@@ -17,6 +17,9 @@ const ticketSchema = new mongoose.Schema(
     ticketdescription: {
       type: String,
     },
+    ticketqr: {
+      type: String,
+    },
     User: {
       type: String,
     },

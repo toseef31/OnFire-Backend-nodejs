@@ -17,8 +17,7 @@ exports.addticket = catchAsync(async (req, res, next) => {
 });
 
 exports.getticket = catchAsync(async (req, res, next) => {
-  console.log(req.params.id);
-  const id = req.params.id + "";
+  const id = req.params.id;
   const tickets = await Ticket.find({
     "event._id": mongoose.Types.ObjectId(id),
   });
@@ -30,22 +29,27 @@ exports.getticket = catchAsync(async (req, res, next) => {
   });
 });
 
-//we have to take my ticket from request
 exports.assignticket = catchAsync(async (req, res, next) => {
-  await User.findByIdAndUpdate(req.user.id, {
-    $push: {
-      MyTicket: "6384993d22843a43b261cc7b",
-    },
-  });
-
-  const user = await User.findById(req.user.id).populate("MyTicket");
-
-  console.log(user.MyTicket);
-  const MyTicket = user.MyTicket;
+  req.body.User = req.user.id;
+  const ticket = await Ticket.create(req.body);
+  console.log(typeof ticket.ticketquantity);
   res.status(200).json({
     status: "success",
     data: {
-      MyTicket,
+      ticket,
+    },
+  });
+});
+
+//get all tickets history of user
+exports.getalluserticket = catchAsync(async (req, res, next) => {
+  const tickets = await Ticket.find({
+    User: req.user.id,
+  });
+  res.status(200).json({
+    status: "success",
+    data: {
+      tickets,
     },
   });
 });

@@ -40,3 +40,14 @@ exports.getallnearvenues = catchAsync(async (req, res, next) => {
     },
   });
 });
+
+exports.getallvenues = catchAsync(async (req, res, next) => {
+  const venue = await Venue.find();
+
+  res.status(200).json({
+    status: "success",
+    data: {
+      data: venue,
+    },
+  });
+});

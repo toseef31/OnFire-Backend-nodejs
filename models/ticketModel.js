@@ -11,8 +11,13 @@ const ticketSchema = new mongoose.Schema(
       type: Number,
     },
     event: Array,
+    status: { type: String, default: "UNVALIDATED" },
     Dates: { type: Date },
+    ticketquantity: { type: Number, default: 1 },
     ticketdescription: {
+      type: String,
+    },
+    User: {
       type: String,
     },
   },

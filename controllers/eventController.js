@@ -108,13 +108,43 @@ exports.geteventsbycategories = catchAsync(async (req, res, next) => {
 });
 
 //get all events by country, city option if he give location then we still need , Location.description
+// exports.geteventsbycitycountry = catchAsync(async (req, res, next) => {
+//   const features = new APIFeatures(
+//     Event.find({ "Location.description": req.params.cityname }).sort({
+//       Dates: 1,
+//     }),
+//     req.query
+//   );
+//   const events = await features.query;
+//   // SEND RESPONSE
+//   res.status(200).json({
+//     status: "success",
+//     results: events.length,
+//     data: {
+//       events,
+//     },
+//   });
+// });
+
 exports.geteventsbycitycountry = catchAsync(async (req, res, next) => {
+  const keyword = req.query.search
+    ? {
+        $or: [
+          {
+            "Location.description": {
+              $regex: req.query.search,
+              $options: "i",
+            },
+          },
+        ],
+      }
+    : {};
+  req.query = { keyword, ...req.query };
   const features = new APIFeatures(
-    Event.find({ "Location.description": "islamabad" }).sort({ Dates: 1 }),
+    Event.find().sort({ Dates: 1 }),
     req.query
-  );
-  const events = await features.query;
-  // SEND RESPONSE
+  ).filter();
+  let events = await features.query;
   res.status(200).json({
     status: "success",
     results: events.length,

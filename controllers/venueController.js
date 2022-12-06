@@ -1,6 +1,7 @@
 const Venue = require("./../models/venueModel");
 const catchAsync = require("./../utils/catchAsync");
 const AppError = require("./../utils/appError");
+const APIFeatures = require("./../utils/apiFeatures");
 
 exports.getallnearvenues = catchAsync(async (req, res, next) => {
   const { latlng, unit } = req.params;
@@ -48,6 +49,31 @@ exports.getallvenues = catchAsync(async (req, res, next) => {
     status: "success",
     data: {
       data: venue,
+    },
+  });
+});
+
+exports.getvenuesbycitycountry = catchAsync(async (req, res, next) => {
+  const keyword = req.query.search
+    ? {
+        $or: [
+          {
+            "Location.description": {
+              $regex: req.query.search,
+              $options: "i",
+            },
+          },
+        ],
+      }
+    : {};
+  req.query = { keyword, ...req.query };
+  const features = new APIFeatures(Venue.find(), req.query).filter();
+  let venues = await features.query;
+  res.status(200).json({
+    status: "success",
+    results: venues.length,
+    data: {
+      venues,
     },
   });
 });

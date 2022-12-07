@@ -29,6 +29,7 @@ const eventSchema = new mongoose.Schema(
       ref: "Category",
       required: true,
     },
+    Tickets: { type: Boolean, default: false },
     servicepoint: [
       {
         type: mongoose.Schema.ObjectId,

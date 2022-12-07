@@ -151,3 +151,18 @@ exports.geteventsbycitycountry = catchAsync(async (req, res, next) => {
     },
   });
 });
+
+//find all events of a venue
+exports.geteventsofvenue = catchAsync(async (req, res, next) => {
+  let events = await Event.find({
+    "venue._id": mongoose.Types.ObjectId(req.params.vid),
+  });
+  // SEND RESPONSE
+  res.status(200).json({
+    status: "success",
+    results: events.length,
+    data: {
+      events,
+    },
+  });
+});

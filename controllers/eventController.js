@@ -42,18 +42,16 @@ exports.createEvent = catchAsync(async (req, res, next) => {
 
 //http://localhost:3000/api/v1/events/getevent/6373b4a1f7f043c9152152ba
 exports.getevent = catchAsync(async (req, res, next) => {
-  const event = await Event.findById(req.params.id).populate({
-    path: "servicepoint",
-    select: "pointname pointimage",
-  });
+  const event = await Event.findById(req.params.id)
+    .populate({
+      path: "servicepoint",
+      select: "pointname pointimage",
+    })
+    .populate({ path: "venue", select: "venuename" });
 
   if (!event) {
     return next(new AppError("No event found with that ID", 404));
   }
-
-  // const dateform= moment(event.Dates).format('ddd DD-MMM-YYYY, hh:mm A')
-  // const data= {event:event.eventname, Dates: dateform}
-
   res.status(200).json({
     status: "success",
     data: {
@@ -71,16 +69,16 @@ exports.getallevents = catchAsync(async (req, res, next) => {
     ? {
         $or: [
           { eventname: { $regex: req.query.search, $options: "i" } },
-          { venuename: { $regex: req.query.search, $options: "i" } },
+          { "venue.venuename": { $regex: req.query.search, $options: "i" } },
         ],
       }
     : {};
   req.query = { keyword, ...req.query };
-  const features = new APIFeatures(Event.find().sort({ Dates: 1 }), req.query)
-    .filter()
-    .sort()
-    .limitFields()
-    .paginate();
+  const features = new APIFeatures(
+    Event.find().sort({ Dates: 1 }),
+    req.query
+  ).filter();
+
   let events = await features.query;
   res.status(200).json({
     status: "success",
@@ -131,7 +129,7 @@ exports.geteventsbycitycountry = catchAsync(async (req, res, next) => {
     ? {
         $or: [
           {
-            "Location.description": {
+            "venue.Location.description": {
               $regex: req.query.search,
               $options: "i",
             },
@@ -145,6 +143,21 @@ exports.geteventsbycitycountry = catchAsync(async (req, res, next) => {
     req.query
   ).filter();
   let events = await features.query;
+  res.status(200).json({
+    status: "success",
+    results: events.length,
+    data: {
+      events,
+    },
+  });
+});
+
+//find all events of a venue
+exports.geteventsofvenue = catchAsync(async (req, res, next) => {
+  let events = await Event.find({
+    "venue._id": mongoose.Types.ObjectId(req.params.vid),
+  });
+  // SEND RESPONSE
   res.status(200).json({
     status: "success",
     results: events.length,

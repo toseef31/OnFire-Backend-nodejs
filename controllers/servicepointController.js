@@ -50,8 +50,6 @@ exports.foodmenubycategory = catchAsync(async (req, res, next) => {
   let obj = fservicepoint.fpointmenu.filter(
     (e) => e.category == req.params.catid
   );
-
-  console.log(obj);
   res.status(200).json({
     status: "success",
     data: {

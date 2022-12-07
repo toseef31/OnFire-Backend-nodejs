@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const Venue = require("./../models/venueModel");
 //https://www.youtube.com/watch?v=bedqJstO5_c
 const eventSchema = new mongoose.Schema(
   {
@@ -8,12 +9,10 @@ const eventSchema = new mongoose.Schema(
     },
     eventmenu: {
       type: String,
-      required: [true, "A event must have a cover image"],
     },
     eventname: {
       type: String,
       required: [true, "A event must have a name"],
-      unique: true,
       trim: true,
       maxlength: [
         40,
@@ -22,20 +21,8 @@ const eventSchema = new mongoose.Schema(
       minlength: [3, "A event name must have more or equal then 10 characters"],
     },
     Dates: [Date],
-    venuename: {
-      type: String,
-      required: [true, "A event must have a venue"],
-    },
-    Location: {
-      // GeoJSON
-      type: {
-        type: String,
-        default: "Point",
-        enum: ["Point"],
-      },
-      coordinates: [Number],
-      address: String,
-      description: String,
+    venue: {
+      type: Object,
     },
     eventcategory: {
       type: mongoose.Schema.Types.ObjectId,
@@ -54,6 +41,12 @@ const eventSchema = new mongoose.Schema(
     toObject: { virtuals: true },
   }
 );
+
+eventSchema.pre("save", async function (next) {
+  const venuesdetail = await Venue.findById(this.venue);
+  this.venue = venuesdetail;
+  next();
+});
 
 const Event = mongoose.model("Event", eventSchema);
 module.exports = Event;

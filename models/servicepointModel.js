@@ -13,6 +13,7 @@ const servicepointSchema = new mongoose.Schema(
           type: String,
         },
         itemname: String,
+        itemimage: String,
         category: String,
         price: Number,
       },

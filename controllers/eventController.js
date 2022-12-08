@@ -4,7 +4,6 @@ const catchAsync = require("./../utils/catchAsync");
 const AppError = require("./../utils/appError");
 const multer = require("multer");
 const { default: mongoose } = require("mongoose");
-const moment = require("moment");
 //file upload
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -104,25 +103,6 @@ exports.geteventsbycategories = catchAsync(async (req, res, next) => {
     },
   });
 });
-
-//get all events by country, city option if he give location then we still need , Location.description
-// exports.geteventsbycitycountry = catchAsync(async (req, res, next) => {
-//   const features = new APIFeatures(
-//     Event.find({ "Location.description": req.params.cityname }).sort({
-//       Dates: 1,
-//     }),
-//     req.query
-//   );
-//   const events = await features.query;
-//   // SEND RESPONSE
-//   res.status(200).json({
-//     status: "success",
-//     results: events.length,
-//     data: {
-//       events,
-//     },
-//   });
-// });
 
 exports.geteventsbycitycountry = catchAsync(async (req, res, next) => {
   const keyword = req.query.search

@@ -23,6 +23,7 @@ const foodserviceSchema = new mongoose.Schema(
           type: String,
         },
         itemname: String,
+        itemimage: String,
         category: {
           type: mongoose.Schema.Types.ObjectId,
           ref: "Category",

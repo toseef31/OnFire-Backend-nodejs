@@ -21,10 +21,19 @@ exports.getticket = catchAsync(async (req, res, next) => {
   const tickets = await Ticket.find({
     "event._id": mongoose.Types.ObjectId(id),
   });
+  console.log(tickets);
+  let arr = [];
+  tickets.forEach((element) => {
+    if (element.User == null) {
+      console.log(tickets.User);
+      arr.push(element);
+    }
+  });
+
   res.status(200).json({
     status: "success",
     data: {
-      tickets,
+      arr,
     },
   });
 });

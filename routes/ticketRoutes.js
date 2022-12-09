@@ -4,11 +4,7 @@ const ticketController = require("../controllers/ticketController");
 
 const router = express.Router();
 
-router.get(
-  "/getticket/:id",
-  authController.protect,
-  ticketController.getticket
-);
+router.get("/getticket/:id", ticketController.getticket);
 
 router.get(
   "/getalluserticket",

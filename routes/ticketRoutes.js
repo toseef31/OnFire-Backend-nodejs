@@ -13,7 +13,7 @@ router.get(
 );
 
 router.post(
-  "/assignticket/:tid",
+  "/assignticket",
   authController.protect,
   ticketController.assignticket
 );

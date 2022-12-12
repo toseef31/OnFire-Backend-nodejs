@@ -5,7 +5,44 @@ const AppError = require("./../utils/appError");
 const QRCode = require("qrcode");
 const { default: mongoose } = require("mongoose");
 
-//add ticket
+exports.getCheckoutSession = catchAsync(async (req, res, next) => {
+  // 1) Get the currently booked tour
+  const ticket = await Ticket.findById(req.params.tid);
+  // console.log(tour);
+
+  // 2) Create checkout session
+  const session = await stripe.checkout.sessions.create({
+    payment_method_types: ["card"],
+    // success_url: `${req.protocol}://${req.get('host')}/my-tours/?tour=${
+    //   req.params.tourId
+    // }&user=${req.user.id}&price=${tour.price}`,
+    success_url: `${req.protocol}://${req.get("host")}/my-tours`,
+    cancel_url: `${req.protocol}://${req.get("host")}/tour/${tour.slug}`,
+    customer_id: req.user.id,
+    client_reference_id: req.params.tid,
+    line_items: [
+      {
+        //
+        name: `${ticket.name} Tour`,
+        description: ticket.event[0].eventname,
+        images: [
+          `${req.protocol}://${req.get("host")}/pro/tours/${tour.imageCover}`,
+        ],
+        amount: tour.price * 100,
+        currency: "usd",
+        quantity: 1,
+      },
+    ],
+  });
+
+  // 3) Create session as response
+  res.status(200).json({
+    status: "success",
+    session,
+  });
+});
+
+//add ticket not used in app
 exports.addticket = catchAsync(async (req, res, next) => {
   const tickets = await Ticket.create(req.body);
   res.status(201).json({
@@ -29,7 +66,6 @@ exports.getticket = catchAsync(async (req, res, next) => {
       arr.push(element);
     }
   });
-
   res.status(200).json({
     status: "success",
     data: {
@@ -39,7 +75,7 @@ exports.getticket = catchAsync(async (req, res, next) => {
 });
 
 exports.assignticket = catchAsync(async (req, res, next) => {
-  req.body.User = req.user.id;
+  const User = req.user.id;
   const data = await QRCode.toDataURL(
     req.user.email + req.user._id + req.body.ticketname
   );

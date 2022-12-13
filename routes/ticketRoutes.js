@@ -19,6 +19,5 @@ router.post(
 );
 
 router.post("/webhook", ticketController.webhookCheckout);
-
 router.post("/addticket", ticketController.addticket);
 module.exports = router;

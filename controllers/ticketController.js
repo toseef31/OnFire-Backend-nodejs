@@ -62,7 +62,7 @@ exports.addticket = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.createOrder = (customer, data) =>
+const createOrder = (customer, data) =>
   catchAsync(async (req, res, next) => {
     const customerdata = JSON.parse(customer.metadata.cart);
     const User = "req.user.id";

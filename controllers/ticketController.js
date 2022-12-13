@@ -62,24 +62,23 @@ exports.addticket = catchAsync(async (req, res, next) => {
   });
 });
 
-const createOrder = (customer, data) =>
-  catchAsync(async (req, res, next) => {
-    const customerdata = JSON.parse(customer.metadata.cart);
-    const User = "req.user.id";
-    let array = [];
-    for (let i = 0; i < customerdata.length; i++) {
-      const data = await QRCode.toDataURL(
-        "req.user.email + req.user._id + req.body[i].ticketname"
-      );
-      const html = `<div><img src="${data}"/></div>`;
+const createOrder = async (customer, data) => {
+  const customerdata = JSON.parse(customer.metadata.cart);
+  const User = customer.metadata.userId;
+  let array = [];
+  for (let i = 0; i < customerdata.length; i++) {
+    const data = await QRCode.toDataURL(
+      customerdata[i].ticketname + User + customerdata[i].event[0].eventname
+    );
+    const html = `<div><img src="${data}"/></div>`;
 
-      customerdata[i].ticketqr = html;
-      customerdata[i].User = User;
-      array.push(customerdata[i]);
-    }
-    const datom = await Ticket.insertMany(array);
-    console.log(datom);
-  });
+    customerdata[i].ticketqr = html;
+    customerdata[i].User = User;
+    array.push(customerdata[i]);
+  }
+  const datom = await Ticket.insertMany(array);
+  console.log(datom);
+};
 
 exports.webhookCheckout = async (req, res) => {
   let data;

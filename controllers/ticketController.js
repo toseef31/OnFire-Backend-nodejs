@@ -2,44 +2,53 @@ const Ticket = require("./../models/ticketModel");
 const User = require("./../models/userModel");
 const catchAsync = require("./../utils/catchAsync");
 const AppError = require("./../utils/appError");
-const QRCode = require("qrcode");
+const Stripe = require("stripe");
 const { default: mongoose } = require("mongoose");
+const QRCode = require("qrcode");
+require("dotenv").config();
+
+const stripe = Stripe(process.env.STRIPE_KEY);
 
 exports.getCheckoutSession = catchAsync(async (req, res, next) => {
-  // 1) Get the currently booked tour
-  const ticket = await Ticket.findById(req.params.tid);
-  // console.log(tour);
+  const customer = await stripe.customers.create({
+    metadata: {
+      userId: req.user.id,
+      cart: JSON.stringify(req.body.cartItems),
+    },
+  });
 
-  // 2) Create checkout session
+  const line_items = req.body.cartItems.map((item) => {
+    return {
+      price_data: {
+        currency: "usd",
+        product_data: {
+          name: item.ticketname,
+          images: [
+            `${req.protocol}://${req.get("host")}/projectdata/eventspic/${
+              item.event[0].eventimage
+            }`,
+          ],
+          description: `${item.event[0].eventname}`,
+          metadata: {
+            id: item.id,
+          },
+        },
+        unit_amount: item.price * 100,
+      },
+      quantity: item.ticketquantity,
+    };
+  });
   const session = await stripe.checkout.sessions.create({
     payment_method_types: ["card"],
-    // success_url: `${req.protocol}://${req.get('host')}/my-tours/?tour=${
-    //   req.params.tourId
-    // }&user=${req.user.id}&price=${tour.price}`,
-    success_url: `${req.protocol}://${req.get("host")}/my-tours`,
-    cancel_url: `${req.protocol}://${req.get("host")}/tour/${tour.slug}`,
-    customer_id: req.user.id,
-    client_reference_id: req.params.tid,
-    line_items: [
-      {
-        //
-        name: `${ticket.name} Tour`,
-        description: ticket.event[0].eventname,
-        images: [
-          `${req.protocol}://${req.get("host")}/pro/tours/${tour.imageCover}`,
-        ],
-        amount: tour.price * 100,
-        currency: "usd",
-        quantity: 1,
-      },
-    ],
+    line_items,
+    mode: "payment",
+    customer: customer.id,
+    success_url: `${req.protocol}://${req.get("host")}`,
+    cancel_url: `${req.protocol}://${req.get("host")}`,
   });
 
-  // 3) Create session as response
-  res.status(200).json({
-    status: "success",
-    session,
-  });
+  // res.redirect(303, session.url);
+  res.send({ url: session.url });
 });
 
 //add ticket not used in app
@@ -52,6 +61,66 @@ exports.addticket = catchAsync(async (req, res, next) => {
     },
   });
 });
+
+exports.createOrder = (customer, data) =>
+  catchAsync(async (req, res, next) => {
+    const customerdata = JSON.parse(customer.metadata.cart);
+    const User = "req.user.id";
+    let array = [];
+    for (let i = 0; i < customerdata.length; i++) {
+      const data = await QRCode.toDataURL(
+        "req.user.email + req.user._id + req.body[i].ticketname"
+      );
+      const html = `<div><img src="${data}"/></div>`;
+
+      customerdata[i].ticketqr = html;
+      customerdata[i].User = User;
+      array.push(customerdata[i]);
+    }
+    const datom = await Ticket.insertMany(array);
+    console.log(datom);
+  });
+
+exports.webhookCheckout = async (req, res) => {
+  let data;
+  let eventType;
+  let webhookSecret;
+  if (webhookSecret) {
+    let event;
+    let signature = req.headers["stripe-signature"];
+
+    try {
+      event = stripe.webhooks.constructEvent(
+        req.body,
+        signature,
+        webhookSecret
+      );
+    } catch (err) {
+      console.log(`⚠️  Webhook signature verification failed:  ${err}`);
+      return res.sendStatus(400);
+    }
+    data = event.data.object;
+    eventType = event.type;
+  } else {
+    data = req.body.data.object;
+    eventType = req.body.type;
+  }
+
+  if (eventType === "checkout.session.completed") {
+    stripe.customers
+      .retrieve(data.customer)
+      .then(async (customer) => {
+        try {
+          // CREATE ORDER
+          createOrder(customer, data);
+        } catch (err) {
+          console.log(err);
+        }
+      })
+      .catch((err) => console.log(err.message));
+  }
+  res.status(200).end();
+};
 
 exports.getticket = catchAsync(async (req, res, next) => {
   const id = req.params.id;
@@ -70,22 +139,6 @@ exports.getticket = catchAsync(async (req, res, next) => {
     status: "success",
     data: {
       arr,
-    },
-  });
-});
-
-exports.assignticket = catchAsync(async (req, res, next) => {
-  const User = req.user.id;
-  const data = await QRCode.toDataURL(
-    req.user.email + req.user._id + req.body.ticketname
-  );
-  const html = `<div><img src="${data}"/></div>`;
-  req.body.ticketqr = html;
-  const ticket = await Ticket.create(req.body);
-  res.status(200).json({
-    status: "success",
-    data: {
-      ticket,
     },
   });
 });

@@ -13,9 +13,12 @@ router.get(
 );
 
 router.post(
-  "/assignticket",
+  "/create-checkout-session",
   authController.protect,
-  ticketController.assignticket
+  ticketController.getCheckoutSession
 );
+
+router.post("/webhook", ticketController.webhookCheckout);
+
 router.post("/addticket", ticketController.addticket);
 module.exports = router;

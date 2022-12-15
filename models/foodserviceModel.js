@@ -30,6 +30,7 @@ const foodserviceSchema = new mongoose.Schema(
           required: true,
         },
         price: Number,
+        quantity: Number,
       },
     ],
   },

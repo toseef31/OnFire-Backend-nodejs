@@ -1,12 +1,11 @@
 const Ticket = require("./../models/ticketModel");
-const User = require("./../models/userModel");
 const catchAsync = require("./../utils/catchAsync");
 const AppError = require("./../utils/appError");
 const Stripe = require("stripe");
 const { default: mongoose } = require("mongoose");
 const QRCode = require("qrcode");
 require("dotenv").config();
-
+/////////////////////////Stripe Implementation for tickets///////////////////////////////////////
 const stripe = Stripe(process.env.STRIPE_KEY);
 
 exports.getCheckoutSession = catchAsync(async (req, res, next) => {
@@ -49,17 +48,6 @@ exports.getCheckoutSession = catchAsync(async (req, res, next) => {
 
   // res.redirect(303, session.url);
   res.send({ url: session.url });
-});
-
-//add ticket not used in app
-exports.addticket = catchAsync(async (req, res, next) => {
-  const tickets = await Ticket.create(req.body);
-  res.status(201).json({
-    status: "success",
-    data: {
-      tickets: tickets,
-    },
-  });
 });
 
 const createOrder = async (customer, data) => {
@@ -120,7 +108,9 @@ exports.webhookCheckout = async (req, res) => {
   }
   res.status(200).end();
 };
+/////////////////End Of Stripe Implementation///////////////////////
 
+//get tickets to show
 exports.getticket = catchAsync(async (req, res, next) => {
   const id = req.params.id;
   const tickets = await Ticket.find({
@@ -149,6 +139,17 @@ exports.getalluserticket = catchAsync(async (req, res, next) => {
   });
 
   res.status(200).json({
+    status: "success",
+    data: {
+      tickets: tickets,
+    },
+  });
+});
+
+//add ticket not used in app
+exports.addticket = catchAsync(async (req, res, next) => {
+  const tickets = await Ticket.create(req.body);
+  res.status(201).json({
     status: "success",
     data: {
       tickets: tickets,

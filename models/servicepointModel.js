@@ -16,6 +16,7 @@ const servicepointSchema = new mongoose.Schema(
         itemimage: String,
         category: String,
         price: Number,
+        quantity: Number,
       },
     ],
     food_servicepoints: [

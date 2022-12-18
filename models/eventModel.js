@@ -30,6 +30,7 @@ const eventSchema = new mongoose.Schema(
       required: true,
     },
     Tickets: { type: Boolean, default: false },
+    food_servicepoints: { type: Boolean, default: false },
     servicepoint: [
       {
         type: mongoose.Schema.ObjectId,

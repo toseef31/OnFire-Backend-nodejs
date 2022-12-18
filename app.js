@@ -14,7 +14,7 @@ const venueRouter = require("./routes/venueRoutes");
 const servicepointRouter = require("./routes/servicepointRoutes");
 const ticketRouter = require("./routes/ticketRoutes");
 const categoryRouter = require("./routes/categoryRoutes");
-const paypalRouter = require("./routes/paypal");
+const paypalRouter = require("./routes/paypalRoutes");
 
 const cors = require("cors");
 const app = express();

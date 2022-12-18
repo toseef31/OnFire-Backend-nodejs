@@ -19,12 +19,6 @@ const servicepointSchema = new mongoose.Schema(
         quantity: Number,
       },
     ],
-    food_servicepoints: [
-      {
-        type: mongoose.Schema.ObjectId,
-        ref: "Foodservice",
-      },
-    ],
   },
   {
     toJSON: { virtuals: true },

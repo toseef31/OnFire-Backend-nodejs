@@ -1,8 +1,8 @@
 const express = require("express");
 const paypal = require("paypal-rest-sdk");
 const QRCode = require("qrcode");
-const Ticket = require("./../models/ticketModel");
-const authController = require("./../controllers/authController");
+const Ticket = require("../models/ticketModel");
+const authController = require("../controllers/authController");
 
 paypal.configure({
   mode: "sandbox", //sandbox or live
@@ -69,7 +69,9 @@ router.post("/pay", async (req, res) => {
         payment_method: "paypal",
       },
       redirect_urls: {
-        return_url: "http://localhost:3000/api/v1/paypal/success",
+        return_url: `${req.protocol}://${req.get(
+          "host"
+        )}/api/v1/paypal/success`,
         cancel_url: "http://localhost:3000/cancel",
       },
       transactions: [

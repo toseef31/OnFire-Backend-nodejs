@@ -10,7 +10,11 @@ const ticketSchema = new mongoose.Schema(
     price: {
       type: Number,
     },
-    event: Array,
+    event: {
+      type: mongoose.Schema.ObjectId,
+      ref: "Event",
+      required: true,
+    },
     status: { type: String, default: "UNVALIDATED" },
     Dates: { type: Date },
     ticketquantity: { type: Number, default: 0 },
@@ -30,11 +34,11 @@ const ticketSchema = new mongoose.Schema(
   }
 );
 
-ticketSchema.pre("save", async function (next) {
-  const eventsPromises = this.event.map(
-    async (id) => await Event.findById(id).select("eventname eventimage ")
-  );
-  this.event = await Promise.all(eventsPromises);
+ticketSchema.pre(/^find/, function (next) {
+  this.populate({
+    path: "event",
+    select: "eventname eventimage",
+  });
   next();
 });
 

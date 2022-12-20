@@ -114,13 +114,11 @@ exports.webhookCheckout = async (req, res) => {
 exports.getticket = catchAsync(async (req, res, next) => {
   const id = req.params.id;
   const tickets = await Ticket.find({
-    "event._id": mongoose.Types.ObjectId(id),
+    event: mongoose.Types.ObjectId(id),
   });
-  console.log(tickets);
   let arr = [];
   tickets.forEach((element) => {
     if (element.User == null) {
-      console.log(tickets.User);
       arr.push(element);
     }
   });
@@ -131,7 +129,6 @@ exports.getticket = catchAsync(async (req, res, next) => {
     },
   });
 });
-
 //get all tickets history of user
 exports.getalluserticket = catchAsync(async (req, res, next) => {
   const tickets = await Ticket.find({

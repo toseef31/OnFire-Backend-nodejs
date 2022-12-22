@@ -101,10 +101,12 @@ exports.foodpointsbycategory = catchAsync(async (req, res, next) => {
 exports.menubycategory = catchAsync(async (req, res, next) => {
   const servicepoint = await Servicepoint.findById(req.params.id);
   let obj = servicepoint.pointmenu.filter((e) => e.category === req.params.cat);
+  const name = servicepoint.pointname;
   res.status(200).json({
     status: "success",
     data: {
       obj,
+      name,
     },
   });
 });

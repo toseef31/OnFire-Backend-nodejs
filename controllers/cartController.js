@@ -7,7 +7,7 @@ const { default: mongoose } = require("mongoose");
 //add ticket
 exports.addincart = catchAsync(async (req, res, next) => {
   const item = await Cart.create({
-    userid: req.user.id,
+    userid: "63874c018a09ac6e788cc6cd", //"req.user.id",
     productname: req.body.productname,
     quantity: req.body.quantity,
     price: req.body.price,
@@ -23,16 +23,26 @@ exports.addincart = catchAsync(async (req, res, next) => {
 });
 
 exports.getallincart = catchAsync(async (req, res, next) => {
-  const item = await Cart.find({ userid: req.user.id });
+  const item = await Cart.find({
+    userid: req.user.id,
+    servicepointname: req.params.pname,
+  });
+
+  let total = 0;
+  item.forEach((el) => {
+    total = total + el.price * el.quantity;
+  });
+
   res.status(201).json({
     status: "success",
     data: {
       product: item,
+      Total: total,
     },
   });
 });
 
-exports.updateincart = catchAsync(async (req, res) => async (req, res) => {
+exports.updateincart = catchAsync(async (req, res) => {
   try {
     const updatedCart = await Cart.findByIdAndUpdate(
       req.params.id,
@@ -54,4 +64,16 @@ exports.deleteincart = catchAsync(async (req, res) => {
   } catch (err) {
     res.status(500).json(err);
   }
+});
+
+exports.getdistinctfs = catchAsync(async (req, res, next) => {
+  const servicepoint = await Cart.find({
+    userid: req.user.id,
+  }).distinct("servicepointname");
+  res.status(200).json({
+    status: "success",
+    data: {
+      servicepoint,
+    },
+  });
 });

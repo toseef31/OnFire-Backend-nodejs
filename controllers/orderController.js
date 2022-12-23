@@ -48,7 +48,7 @@ exports.saveOrder = async (customer, data) => {
   const customerdata = JSON.parse(customer.metadata.cart);
   const order = await Order.create({
     User: customer.metadata.userId,
-    servicepointname: customerdata.pointname,
+    servicepointname: customerdata[0].pointname,
     products: customerdata.cartItems,
     status: "pending",
   });

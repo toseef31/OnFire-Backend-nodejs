@@ -20,6 +20,6 @@ router.post(
   ticketController.getCheckoutSession
 );
 
-router.post("/webhook", ticketController.webhookCheckout);
+//router.post("/webhook", ticketController.webhookCheckout);
 router.post("/addticket", ticketController.addticket);
 module.exports = router;

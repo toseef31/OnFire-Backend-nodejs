@@ -1,4 +1,4 @@
-const Order = require("./../models/servicepointModel");
+const Order = require("./../models/orderModel");
 const Stripe = require("stripe");
 const catchAsync = require("./../utils/catchAsync");
 const fs = require("fs");
@@ -50,7 +50,7 @@ exports.saveOrder = async (customer, data) => {
   const order = await Order.create({
     User: customer.metadata.userId,
     servicepointname: customerdata[0].pointname,
-    products: customerdata.cartItems,
+    products: [customerdata.cartItems],
     status: "pending",
   });
   console.log(order);

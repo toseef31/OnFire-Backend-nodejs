@@ -53,6 +53,7 @@ exports.saveOrder = async (customer, data) => {
     products: customerdata.cartItems,
     status: "pending",
   });
+  console.log(customerdata.cartItems);
   console.log(order);
 };
 

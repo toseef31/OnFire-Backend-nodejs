@@ -1,4 +1,4 @@
-const Order = require("./../models/servicepointModel");
+const Order = require("./../models/orderModel");
 const Stripe = require("stripe");
 const catchAsync = require("./../utils/catchAsync");
 const fs = require("fs");

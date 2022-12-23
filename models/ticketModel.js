@@ -25,7 +25,7 @@ const ticketSchema = new mongoose.Schema(
       type: String,
     },
     User: {
-      type: String,
+      type: mongoose.Schema.ObjectId,
     },
   },
   {

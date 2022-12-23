@@ -12,6 +12,8 @@ router.get(
   ticketController.getalluserticket
 );
 
+router.post("/createcard", ticketController.addcard);
+
 router.post(
   "/create-checkout-session",
   authController.protect,

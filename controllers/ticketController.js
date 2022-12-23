@@ -4,6 +4,7 @@ const AppError = require("./../utils/appError");
 const Stripe = require("stripe");
 const { default: mongoose } = require("mongoose");
 const QRCode = require("qrcode");
+const { translateAliases } = require("../models/cartModel");
 require("dotenv").config();
 /////////////////////////Stripe Implementation for tickets///////////////////////////////////////
 const stripe = Stripe(process.env.STRIPE_KEY);
@@ -116,6 +117,7 @@ exports.getticket = catchAsync(async (req, res, next) => {
   const tickets = await Ticket.find({
     event: mongoose.Types.ObjectId(id),
   });
+
   let arr = [];
   tickets.forEach((element) => {
     if (element.User == null) {
@@ -129,6 +131,7 @@ exports.getticket = catchAsync(async (req, res, next) => {
     },
   });
 });
+
 //get all tickets history of user
 exports.getalluserticket = catchAsync(async (req, res, next) => {
   const tickets = await Ticket.find({
@@ -153,3 +156,26 @@ exports.addticket = catchAsync(async (req, res, next) => {
     },
   });
 });
+
+exports.addcard = catchAsync(async (req, res, next) => {
+  // const card = await stripe.createSource("cus_N1TiFCzsTlIgRV", {
+  //   source: "tok_amex",
+  // });
+  const ownerInfo = {
+    owner: {
+      name: "Jenny Rosen",
+      address: {
+        line1: "Nollendorfstraße 27",
+        city: "Berlin",
+        postal_code: "10777",
+        country: "DE",
+      },
+      email: "jenny.rosen@example.com",
+    },
+  };
+
+  res.send(card);
+});
+
+//stripe
+//https://www.youtube.com/watch?v=K6sq8yEsaaM&list=PLyzY2l387AlMy6r_JhflipKqKrhVK17gP&index=6

@@ -34,11 +34,7 @@ exports.updateMe = catchAsync(async (req, res, next) => {
 });
 
 exports.generateQR = async (req, res, next) => {
-  try {
-    const data = await QRCode.toDataURL(req.user.email + " " + req.user._id);
-    const html = `<div><img src="${data}"/></div>`;
-    res.send(html);
-  } catch (err) {
-    console.error(err);
-  }
+  const data = await QRCode.toDataURL(req.user.email + " " + req.user._id);
+  const html = `<div><img src="${data}"/></div>`;
+  res.send(html);
 };

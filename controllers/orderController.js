@@ -50,7 +50,7 @@ exports.saveOrder = async (customer, data) => {
   const order = await Order.create({
     User: customer.metadata.userId,
     servicepointname: customerdata[0].pointname,
-    products: [customerdata.cartItems],
+    products: customerdata.cartItems,
     status: "pending",
   });
   console.log(order);

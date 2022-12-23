@@ -5,7 +5,7 @@ const stripe = Stripe(process.env.STRIPE_KEY);
 const saveindb = async (customer, data) => {
   const customerdata = JSON.parse(customer.metadata.cart);
   if (customerdata[0].ticketname) {
-    ticketController.createOrder;
+    ticketController.createOrder(customer, data);
   } else {
     console.log(customerdata);
   }

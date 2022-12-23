@@ -45,6 +45,7 @@ exports.getCheckoutSession = catchAsync(async (req, res, next) => {
 });
 
 exports.saveOrder = async (customer, data) => {
+  console.log("in order");
   const customerdata = JSON.parse(customer.metadata.cart);
   const order = await Order.create({
     User: customer.metadata.userId,
@@ -52,7 +53,7 @@ exports.saveOrder = async (customer, data) => {
     products: customerdata.cartItems,
     status: "pending",
   });
-  console.log("order added");
+  console.log(order);
 };
 
 /////////////////End Of Stripe Implementation///////////////////////

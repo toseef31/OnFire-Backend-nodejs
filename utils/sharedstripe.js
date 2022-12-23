@@ -1,4 +1,5 @@
 const Stripe = require("stripe");
+const stripe = Stripe(process.env.STRIPE_KEY);
 const createOrder = async (customer, data) => {
   const customerdata = JSON.parse(customer.metadata.cart);
   // const User = customer.metadata.userId;

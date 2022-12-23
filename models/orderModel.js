@@ -6,21 +6,10 @@ const orderSchema = new mongoose.Schema(
       type: mongoose.Schema.ObjectId,
       ref: "User",
     },
-    products: [
-      {
-        ItemId: {
-          type: String,
-        },
-        quantity: {
-          type: Number,
-          default: 1,
-        },
-        servicepointname: {
-          type: String,
-        },
-      },
-    ],
-    amount: { type: Number, required: true },
+    servicepointname: {
+      type: String,
+    },
+    products: Array,
     status: { type: String, default: "pending" },
   },
   {

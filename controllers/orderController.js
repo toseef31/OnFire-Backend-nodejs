@@ -2,6 +2,7 @@ const Order = require("./../models/servicepointModel");
 const Stripe = require("stripe");
 const catchAsync = require("./../utils/catchAsync");
 const fs = require("fs");
+const { response } = require("../app");
 
 /////////////////////////Stripe Implementation for tickets///////////////////////////////////////
 const stripe = Stripe(process.env.STRIPE_KEY);
@@ -43,52 +44,15 @@ exports.getCheckoutSession = catchAsync(async (req, res, next) => {
   res.send({ url: session.url });
 });
 
-const createOrder = async (customer, data) => {
+exports.saveOrder = async (customer, data) => {
   const customerdata = JSON.parse(customer.metadata.cart);
-  const User = customer.metadata.userId;
-  console.log(customerdata);
-  //   const datom = await Ticket.insertMany(array);
-  //   console.log(datom);
+  const order = await Order.create({
+    User: customer.metadata.userId,
+    servicepointname: customerdata.pointname,
+    products: customerdata.cartItems,
+    status: "pending",
+  });
+  console.log("order added");
 };
 
-exports.webhookCheckout = async (req, res) => {
-  let data;
-  let eventType;
-  let webhookSecret;
-  if (webhookSecret) {
-    let event;
-    let signature = req.headers["stripe-signature"];
-
-    try {
-      event = stripe.webhooks.constructEvent(
-        req.body,
-        signature,
-        webhookSecret
-      );
-    } catch (err) {
-      console.log(`⚠️  Webhook signature verification failed:  ${err}`);
-      return res.sendStatus(400);
-    }
-    data = event.data.object;
-    eventType = event.type;
-  } else {
-    data = req.body.data.object;
-    eventType = req.body.type;
-  }
-
-  if (eventType === "checkout.session.completed") {
-    stripe.customers
-      .retrieve(data.customer)
-      .then(async (customer) => {
-        try {
-          // CREATE ORDER
-          createOrder(customer, data);
-        } catch (err) {
-          console.log(err);
-        }
-      })
-      .catch((err) => console.log(err.message));
-  }
-  res.status(200).end();
-};
 /////////////////End Of Stripe Implementation///////////////////////

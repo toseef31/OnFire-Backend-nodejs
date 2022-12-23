@@ -51,7 +51,7 @@ exports.getCheckoutSession = catchAsync(async (req, res, next) => {
   res.send({ url: session.url });
 });
 
-exports.createOrder = async (customer, data) => {
+exports.saveticket = async (customer, data) => {
   const customerdata = JSON.parse(customer.metadata.cart);
   const User = customer.metadata.userId;
   let array = [];

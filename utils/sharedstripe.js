@@ -1,13 +1,14 @@
 const Stripe = require("stripe");
 const ticketController = require("../controllers/ticketController");
+const orderController = require("../controllers/orderController");
 
 const stripe = Stripe(process.env.STRIPE_KEY);
 const saveindb = async (customer, data) => {
   const customerdata = JSON.parse(customer.metadata.cart);
   if (customerdata[0].ticketname) {
-    ticketController.createOrder(customer, data);
+    ticketController.saveticket(customer, data);
   } else {
-    console.log(customerdata);
+    orderController.saveOrder(customer, data);
   }
 };
 

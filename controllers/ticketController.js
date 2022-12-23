@@ -51,7 +51,7 @@ exports.getCheckoutSession = catchAsync(async (req, res, next) => {
   res.send({ url: session.url });
 });
 
-const createOrder = async (customer, data) => {
+exports.createOrder = async (customer, data) => {
   const customerdata = JSON.parse(customer.metadata.cart);
   const User = customer.metadata.userId;
   let array = [];
@@ -69,46 +69,6 @@ const createOrder = async (customer, data) => {
   console.log(datom);
 };
 
-exports.webhookCheckout = async (req, res) => {
-  let data;
-  let eventType;
-  let webhookSecret;
-  if (webhookSecret) {
-    let event;
-    let signature = req.headers["stripe-signature"];
-
-    try {
-      event = stripe.webhooks.constructEvent(
-        req.body,
-        signature,
-        webhookSecret
-      );
-    } catch (err) {
-      console.log(`⚠️  Webhook signature verification failed:  ${err}`);
-      return res.sendStatus(400);
-    }
-    data = event.data.object;
-    eventType = event.type;
-  } else {
-    data = req.body.data.object;
-    eventType = req.body.type;
-  }
-
-  if (eventType === "checkout.session.completed") {
-    stripe.customers
-      .retrieve(data.customer)
-      .then(async (customer) => {
-        try {
-          // CREATE ORDER
-          createOrder(customer, data);
-        } catch (err) {
-          console.log(err);
-        }
-      })
-      .catch((err) => console.log(err.message));
-  }
-  res.status(200).end();
-};
 /////////////////End Of Stripe Implementation///////////////////////
 
 //get tickets to show

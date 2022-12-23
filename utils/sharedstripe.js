@@ -1,20 +1,11 @@
 const Stripe = require("stripe");
+const ticketController = require("../controllers/ticketController");
+
 const stripe = Stripe(process.env.STRIPE_KEY);
-const createOrder = async (customer, data) => {
+const saveindb = async (customer, data) => {
   const customerdata = JSON.parse(customer.metadata.cart);
   if (customerdata[0].ticketname) {
-    const User = customer.metadata.userId;
-    let array = [];
-    for (let i = 0; i < customerdata.length; i++) {
-      const data = await QRCode.toDataURL(
-        customerdata[i].ticketname + User + customerdata[i].event[0].eventname
-      );
-      const html = `<div><img src="${data}"/></div>`;
-      customerdata[i].ticketqr = html;
-      customerdata[i].User = User;
-      array.push(customerdata[i]);
-    }
-    const datom = await Ticket.insertMany(array);
+    ticketController.createOrder;
   } else {
     console.log(customerdata);
   }
@@ -51,7 +42,7 @@ exports.webhookCheckout = async (req, res) => {
       .then(async (customer) => {
         try {
           // CREATE ORDER
-          createOrder(customer, data);
+          saveindb(customer, data);
         } catch (err) {
           console.log(err);
         }

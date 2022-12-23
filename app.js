@@ -17,6 +17,7 @@ const categoryRouter = require("./routes/categoryRoutes");
 const paypalRouter = require("./routes/paypalRoutes");
 const cartRouter = require("./routes/cartRoutes");
 const orderRouter = require("./routes/orderRoutes");
+const stripewebhook = require("./utils/sharedstripe");
 
 const cors = require("cors");
 const app = express();
@@ -77,6 +78,7 @@ app.use("/api/v1/category", categoryRouter);
 app.use("/api/v1/paypal", paypalRouter);
 app.use("/api/v1/cart", cartRouter);
 app.use("/api/v1/order", orderRouter);
+app.use("/api/v1/saveindb", stripewebhook.webhookCheckout);
 
 app.all("*", (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));

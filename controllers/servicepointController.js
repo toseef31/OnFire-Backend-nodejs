@@ -1,6 +1,5 @@
 const Servicepoint = require("./../models/servicepointModel");
 const Foodservice = require("./../models/foodserviceModel");
-
 const catchAsync = require("./../utils/catchAsync");
 const fs = require("fs");
 

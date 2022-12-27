@@ -96,7 +96,7 @@ exports.getticket = catchAsync(async (req, res, next) => {
 exports.getalluserticket = catchAsync(async (req, res, next) => {
   const tickets = await Ticket.find({
     User: req.user.id,
-  });
+  }).sort({ event: 1 });
 
   res.status(200).json({
     status: "success",

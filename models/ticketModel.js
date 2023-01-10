@@ -17,6 +17,7 @@ const ticketSchema = new mongoose.Schema(
     },
     status: { type: String, default: "UNVALIDATED" },
     Dates: { type: Date },
+    color: { type: String },
     ticketquantity: { type: Number, default: 0 },
     ticketdescription: {
       type: String,

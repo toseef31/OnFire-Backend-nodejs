@@ -96,11 +96,25 @@ exports.getticket = catchAsync(async (req, res, next) => {
 exports.getalluserticket = catchAsync(async (req, res, next) => {
   let tickets = await Ticket.find({
     User: req.user.id,
-  }).sort({ event: 1 });
+  });
+
+  let ticket = tickets.sort((a, b) => {
+    console.log(a.event.eventname);
+    let fa = a.event._id; //.toLowerCase(),
+    fb = b.event._id; //.toLowerCase();
+
+    if (fa < fb) {
+      return -1;
+    }
+    if (fa > fb) {
+      return 1;
+    }
+    return 0;
+  });
   res.status(200).json({
     status: "success",
     data: {
-      tickets: tickets,
+      tickets: ticket,
     },
   });
 });

@@ -58,3 +58,16 @@ exports.saveOrder = async (customer, data) => {
 };
 
 /////////////////End Of Stripe Implementation///////////////////////
+
+exports.getOrderQue = async (req, res, next) => {
+  console.log("orders");
+  const orders = await Order.find({
+    User: req.user._id,
+  });
+  res.status(200).json({
+    status: "success",
+    data: {
+      orders,
+    },
+  });
+};

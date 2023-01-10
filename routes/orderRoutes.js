@@ -9,4 +9,5 @@ router.post(
   authController.protect,
   orderController.getCheckoutSession
 );
+router.get("/getorders", authController.protect, orderController.getOrderQue);
 module.exports = router;
